@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 250" width="100%" height="100%">
+  <!-- Floor line -->
+  <line x1="20" y1="205" x2="380" y2="205" stroke="#ffffff" stroke-width="2" opacity="0.6" />
+
+  <!-- Twin Bed 1 (Left) -->
+  <rect x="40" y="145" width="130" height="60" rx="4" fill="#4a5568" stroke="#fff" stroke-width="2" />
+  <rect x="40" y="110" width="8" height="40" rx="2" fill="#2d3748" stroke="#fff" stroke-width="1.5" />
+  <rect x="55" y="130" width="40" height="16" rx="2" fill="#faf6ee" stroke="#fff" stroke-width="1.5" />
+  <!-- Blanket 1 -->
+  <path d="M 105 145 L 105 205 L 170 205 L 170 145 Z" fill="#9f7aea" stroke="#fff" stroke-width="1.5" />
+  <path d="M 105 153 L 170 153" stroke="#fff" stroke-width="1.5" />
+
+  <!-- Twin Bed 2 (Right) -->
+  <rect x="230" y="145" width="130" height="60" rx="4" fill="#4a5568" stroke="#fff" stroke-width="2" />
+  <rect x="352" y="110" width="8" height="40" rx="2" fill="#2d3748" stroke="#fff" stroke-width="1.5" />
+  <rect x="305" y="130" width="40" height="16" rx="2" fill="#faf6ee" stroke="#fff" stroke-width="1.5" />
+  <!-- Blanket 2 -->
+  <path d="M 230 145 L 230 205 L 295 205 L 295 145 Z" fill="#3182ce" stroke="#fff" stroke-width="1.5" />
+  <path d="M 230 153 L 295 153" stroke="#fff" stroke-width="1.5" />
+
+  <!-- Shared Nightstand in between -->
+  <rect x="185" y="155" width="30" height="50" rx="3" fill="#dd6b20" stroke="#fff" stroke-width="1.5" />
+  <circle cx="200" cy="180" r="3.5" fill="#faf089" />
+
+  <!-- Table Lamp -->
+  <path d="M 195 155 L 205 155 M 200 155 L 200 142 M 190 142 L 210 142 L 205 125 L 195 125 Z" fill="#e53e3e" stroke="#fff" stroke-width="1.5" />
+  <!-- Lamp Glow -->
+  <circle cx="200" cy="133" r="12" fill="#f6e05e" opacity="0.35" filter="blur(2px)" />
+</svg>

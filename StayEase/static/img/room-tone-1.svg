@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 250" width="100%" height="100%">
+  <!-- Floor line -->
+  <line x1="20" y1="205" x2="380" y2="205" stroke="#ffffff" stroke-width="2" opacity="0.6" />
+
+  <!-- Deluxe Bed -->
+  <rect x="50" y="130" width="200" height="75" rx="5" fill="#4a5568" stroke="#fff" stroke-width="2" />
+  <rect x="50" y="85" width="12" height="50" rx="2" fill="#2d3748" stroke="#fff" stroke-width="1.5" />
+  
+  <!-- Deluxe Pillows -->
+  <rect x="75" y="112" width="50" height="18" rx="3" fill="#edf2f7" stroke="#fff" stroke-width="1.5" />
+  <rect x="135" y="112" width="50" height="18" rx="3" fill="#edf2f7" stroke="#fff" stroke-width="1.5" />
+  <rect x="90" y="122" width="30" height="10" rx="2" fill="#ecc94b" stroke="#fff" stroke-width="1" />
+  <rect x="150" y="122" width="30" height="10" rx="2" fill="#ecc94b" stroke="#fff" stroke-width="1" />
+
+  <!-- Blanket -->
+  <path d="M 175 130 L 175 205 L 250 205 L 250 130 Z" fill="#38a169" stroke="#fff" stroke-width="1.5" />
+  <path d="M 175 142 L 250 142" stroke="#fff" stroke-width="1.5" />
+
+  <!-- Cozy Armchair on the right -->
+  <!-- Chair body -->
+  <path d="M 285 205 C 285 165, 300 150, 320 150 C 340 150, 355 165, 355 205 Z" fill="#ed8936" stroke="#fff" stroke-width="2" />
+  <!-- Arm rests -->
+  <rect x="275" y="165" width="20" height="35" rx="4" fill="#dd6b20" stroke="#fff" stroke-width="1.5" />
+  <rect x="345" y="165" width="20" height="35" rx="4" fill="#dd6b20" stroke="#fff" stroke-width="1.5" />
+  <!-- Pillow on chair -->
+  <rect x="295" y="175" width="50" height="30" rx="4" fill="#fbb6ce" stroke="#fff" stroke-width="1.5" />
+
+  <!-- Hanging Modern Pendant Light -->
+  <line x1="320" y1="20" x2="320" y2="85" stroke="#ecc94b" stroke-width="2" />
+  <path d="M 305 85 L 335 85 L 327 100 L 313 100 Z" fill="#faf089" stroke="#fff" stroke-width="1.5" />
+  <!-- Glow -->
+  <circle cx="320" cy="105" r="15" fill="#f6e05e" opacity="0.3" filter="blur(2px)" />
+</svg>

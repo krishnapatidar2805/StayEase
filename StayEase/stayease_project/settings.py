@@ -2,15 +2,16 @@
 Django settings for StayEase project.
 """
 import os
+import dj_database_url
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-CHANGE-THIS-SECRET-KEY-IN-PRODUCTION-xyz123'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-CHANGE-THIS-SECRET-KEY-IN-PRODUCTION-xyz123')
 
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'True').lower() == 'true'
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(',')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -33,6 +34,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -68,7 +70,15 @@ WSGI_APPLICATION = 'stayease_project.wsgi.application'
 # the original spec) set USE_MYSQL=1 as an environment variable and fill in
 # the credentials below, then: pip install mysqlclient
 # ---------------------------------------------------------------------------
-if os.environ.get('USE_MYSQL') == '1':
+if os.environ.get('DATABASE_URL'):
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=os.environ.get('DATABASE_URL'),
+            conn_max_age=600,
+            conn_health_checks=True,
+        )
+    }
+elif os.environ.get('USE_MYSQL') == '1':
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
@@ -102,6 +112,7 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedCopyWithoutManifestStaticFilesStorage'
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
