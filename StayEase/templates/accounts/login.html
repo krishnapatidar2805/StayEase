@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block content %}
+<section class="auth-wrap">
+  <div class="auth-card">
+    <div class="panel">
+      <p class="eyebrow">Welcome back</p>
+      <h2>Log in to StayEase</h2>
+      <div class="divider-gold"></div>
+      <form method="post">
+        {% csrf_token %}
+        <label class="form-label">Username or Email</label>{{ form.username }}
+        <div style="margin-top:12px;"><label class="form-label">Password</label>{{ form.password }}</div>
+        {% if form.errors %}<div class="alert-box alert-danger" style="margin-top:12px;">Invalid credentials.</div>{% endif %}
+        <div style="text-align:right; margin-top:8px;"><a href="{% url 'accounts:forgot_password' %}" class="link-gold" style="font-size:.85rem;">Forgot password?</a></div>
+        <button type="submit" class="btn btn-gold btn-block" style="margin-top:18px;">Log In</button>
+      </form>
+      <p style="text-align:center; margin-top:16px; font-size:.9rem;">New to StayEase? <a href="{% url 'accounts:register' %}" class="link-gold">Create an account</a></p>
+    </div>
+  </div>
+</section>
+{% endblock %}

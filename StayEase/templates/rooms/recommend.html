@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}AI Room Recommendation{% endblock %}
+{% block content %}
+<section class="hero" style="padding-bottom:60px;">
+  <div class="hero-inner" style="grid-template-columns:1fr;">
+    <div style="max-width:640px;">
+      <p class="eyebrow">AI Feature</p>
+      <h1>Let AI find your room</h1>
+      <p class="lead">Tell us your budget, guest count, room type, and purpose of travel — our recommendation engine scores every room and ranks the best matches, live.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0; margin-top:-60px; position:relative; z-index:3;">
+  <div class="container-narrow">
+    <div class="panel">
+      <form method="get">
+        <input type="hidden" name="submitted" value="1">
+        <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:14px;">
+          <div><label class="form-label">Budget / night (₹)</label><input class="form-control" type="number" name="budget" value="{{ request.GET.budget }}" placeholder="3000"></div>
+          <div><label class="form-label">Guests</label><input class="form-control" type="number" name="guests" value="{{ request.GET.guests }}" placeholder="2"></div>
+          <div><label class="form-label">Room Type</label>
+            <select class="form-select" name="room_type">
+              <option value="">Any</option>
+              {% for cat in categories %}<option value="{{ cat.name }}" {% if request.GET.room_type == cat.name %}selected{% endif %}>{{ cat.name }}</option>{% endfor %}
+            </select>
+          </div>
+          <div><label class="form-label">Purpose of Stay</label>
+            <select class="form-select" name="purpose">
+              <option value="">Any</option>
+              {% for val, label in purposes %}<option value="{{ val }}" {% if request.GET.purpose == val %}selected{% endif %}>{{ label }}</option>{% endfor %}
+            </select>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-gold" style="margin-top:16px;"><i class="bi bi-stars"></i> Get AI Recommendations</button>
+      </form>
+    </div>
+
+    {% if results %}
+    <div style="margin-top:34px;">
+      <h2>Top matches for you</h2>
+      <div class="divider-gold"></div>
+      <div class="room-grid">
+        {% for room, score, reasons in results %}
+        <div class="room-card">
+          <a href="{% url 'rooms:detail' room.pk %}">
+            <div class="room-banner {{ room.tone_class }}"><img src="{% static room.tone_image %}" alt="{{ room.name }}">
+              <span class="price-tag">Match {{ score }}%</span>
+            </div>
+          </a>
+          <div class="room-body">
+            <h3>{{ room.name }}</h3>
+            <span class="badge-soft" style="background:var(--cream-deep); color:var(--navy);">{{ room.category.name }}</span>
+            <div style="margin:10px 0;">
+              {% for r in reasons %}<div style="font-size:.82rem; color:var(--success);"><i class="bi bi-check-circle-fill"></i> {{ r }}</div>{% endfor %}
+            </div>
+            <div class="room-footer">
+              <b style="font-family:var(--font-display); font-size:1.2rem;">₹{{ room.price_per_night|floatformat:0 }}/night</b>
+              <a href="{% url 'rooms:detail' room.pk %}" class="btn btn-sm btn-outline">View</a>
+            </div>
+          </div>
+        </div>
+        {% empty %}
+        <div class="empty-state"><i class="bi bi-emoji-frown"></i><p>No matching rooms found. Try adjusting your budget or guest count.</p></div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

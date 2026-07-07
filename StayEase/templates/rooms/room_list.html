@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Rooms{% endblock %}
+{% block content %}
+<section class="section" style="padding-bottom:0;">
+  <div class="container-narrow">
+    <p class="eyebrow">Explore</p>
+    <h1>All rooms</h1>
+    <div class="divider-gold"></div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:20px;">
+  <div class="container-narrow" style="display:grid; grid-template-columns: 280px 1fr; gap:30px; align-items:flex-start;">
+
+    <form class="panel" method="get" style="position:sticky; top:96px;">
+      <h3 style="font-size:1.05rem;"><i class="bi bi-funnel"></i> Filters</h3>
+      <div style="margin-top:14px;"><label class="form-label">Search</label><input class="form-control" type="text" name="q" value="{{ query }}" placeholder="Room name..."></div>
+      <div style="margin-top:14px;"><label class="form-label">Category</label>
+        <select class="form-select" name="category">
+          <option value="">All categories</option>
+          {% for cat in categories %}<option value="{{ cat.id }}" {% if selected_category == cat.id|stringformat:"s" %}selected{% endif %}>{{ cat.name }}</option>{% endfor %}
+        </select>
+      </div>
+      <div style="margin-top:14px; display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+        <div><label class="form-label">Min ₹</label><input class="form-control" type="number" name="min_price" value="{{ min_price }}"></div>
+        <div><label class="form-label">Max ₹</label><input class="form-control" type="number" name="max_price" value="{{ max_price }}"></div>
+      </div>
+      <div style="margin-top:14px;"><label class="form-label">Min Guests</label><input class="form-control" type="number" name="capacity" value="{{ capacity }}"></div>
+      <div style="margin-top:14px;"><label class="form-label">Amenity</label>
+        <select class="form-select" name="amenity">
+          <option value="">Any</option>
+          {% for a in amenities %}<option value="{{ a.id }}" {% if amenity == a.id|stringformat:"s" %}selected{% endif %}>{{ a.name }}</option>{% endfor %}
+        </select>
+      </div>
+      <div style="margin-top:14px;"><label class="form-label">Sort by</label>
+        <select class="form-select" name="sort">
+          <option value="">Newest</option>
+          <option value="price_low" {% if sort == 'price_low' %}selected{% endif %}>Price: Low to High</option>
+          <option value="price_high" {% if sort == 'price_high' %}selected{% endif %}>Price: High to Low</option>
+          <option value="rating" {% if sort == 'rating' %}selected{% endif %}>Top Rated</option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-navy btn-block" style="margin-top:18px;">Apply Filters</button>
+      <a href="{% url 'rooms:list' %}" class="btn btn-outline btn-block" style="margin-top:8px;">Clear</a>
+    </form>
+
+    <div>
+      <div class="room-grid">
+        {% for room in page_obj %}
+        {% include "partials/room_card.html" with room=room %}
+        {% empty %}
+        <div class="empty-state"><i class="bi bi-search"></i><p>No rooms match your filters. Try widening your search.</p></div>
+        {% endfor %}
+      </div>
+
+      {% if page_obj.has_other_pages %}
+      <div class="pagination-stayease">
+        {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}">&laquo; Prev</a>{% endif %}
+        <span class="current">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}">Next &raquo;</a>{% endif %}
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% endblock %}

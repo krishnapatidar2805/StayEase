@@ -1,0 +1,69 @@
+{% extends "adminpanel/base_admin.html" %}
+{% block title %}Admin Dashboard{% endblock %}
+{% block admin_content %}
+<p class="eyebrow">Overview</p>
+<h1>Admin dashboard</h1>
+<div class="divider-gold"></div>
+
+<div class="room-grid" style="grid-template-columns: repeat(auto-fit,minmax(180px,1fr)); margin-bottom:26px;">
+  <div class="dash-stat"><div class="num">{{ total_users }}</div><div class="lbl">Total Users</div></div>
+  <div class="dash-stat"><div class="num">{{ total_rooms }}</div><div class="lbl">Total Rooms</div></div>
+  <div class="dash-stat"><div class="num">{{ total_bookings }}</div><div class="lbl">Total Bookings</div></div>
+  <div class="dash-stat"><div class="num">₹{{ revenue|floatformat:0 }}</div><div class="lbl">Revenue</div></div>
+  <div class="dash-stat"><div class="num">{{ occupancy_rate }}%</div><div class="lbl">Occupancy Rate</div></div>
+</div>
+
+<div style="display:grid; grid-template-columns:1.4fr 1fr; gap:24px; margin-bottom:26px;">
+  <div class="panel">
+    <h3>Revenue — last 7 days</h3>
+    <canvas id="revenueChart" height="110"></canvas>
+  </div>
+  <div class="panel">
+    <h3>Booking status</h3>
+    <canvas id="statusChart" height="110"></canvas>
+  </div>
+</div>
+
+<div style="display:grid; grid-template-columns:1.4fr 1fr; gap:24px;">
+  <div class="panel">
+    <h3>Latest bookings</h3>
+    <table class="table-clean">
+      <thead><tr><th>Room</th><th>User</th><th>Status</th><th>Amount</th></tr></thead>
+      <tbody>
+        {% for b in latest_bookings %}
+        <tr><td>{{ b.room.name }}</td><td>{{ b.user.username }}</td><td><span class="badge-soft badge-{{ b.status }}">{{ b.get_status_display }}</span></td><td>₹{{ b.total_amount|floatformat:0 }}</td></tr>
+        {% empty %}<tr><td colspan="4" style="text-align:center; color:var(--ink-60);">No bookings yet.</td></tr>{% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="panel">
+    <h3><i class="bi bi-emoji-smile" style="color:var(--gold);"></i> AI Review Sentiment</h3>
+    <div style="margin-top:10px;">
+      <div style="display:flex; justify-content:space-between;"><span class="badge-soft badge-positive">Positive</span><b>{{ sentiment_stats.positive }} ({{ sentiment_stats.positive_pct }}%)</b></div>
+      <div style="display:flex; justify-content:space-between; margin-top:8px;"><span class="badge-soft badge-neutral">Neutral</span><b>{{ sentiment_stats.neutral }} ({{ sentiment_stats.neutral_pct }}%)</b></div>
+      <div style="display:flex; justify-content:space-between; margin-top:8px;"><span class="badge-soft badge-negative">Negative</span><b>{{ sentiment_stats.negative }} ({{ sentiment_stats.negative_pct }}%)</b></div>
+    </div>
+    <a href="{% url 'adminpanel:review_manage' %}" class="btn btn-outline btn-block" style="margin-top:16px;">View All Reviews</a>
+  </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script>
+new Chart(document.getElementById('revenueChart'), {
+  type: 'line',
+  data: {
+    labels: {{ revenue_labels|safe }},
+    datasets: [{ label: 'Revenue (₹)', data: {{ revenue_values|safe }}, borderColor: '#c69a44', backgroundColor: 'rgba(198,154,68,.15)', tension: .35, fill: true }]
+  },
+  options: { plugins: { legend: { display: false } } }
+});
+new Chart(document.getElementById('statusChart'), {
+  type: 'doughnut',
+  data: {
+    labels: [{% for s in status_counts %}'{{ s.status }}',{% endfor %}],
+    datasets: [{ data: [{% for s in status_counts %}{{ s.count }},{% endfor %}], backgroundColor: ['#c69a44','#3f7a5c','#b1453f','#10314a'] }]
+  }
+});
+</script>
+{% endblock %}

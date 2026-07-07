@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="section">
+  <div class="container-narrow" style="display:grid; grid-template-columns:230px 1fr; gap:26px; align-items:flex-start;">
+    <div class="sidebar-admin">
+      <a href="{% url 'adminpanel:dashboard' %}" class="{% if active == 'dashboard' %}active{% endif %}"><i class="bi bi-speedometer2"></i> Dashboard</a>
+      <a href="{% url 'adminpanel:room_manage' %}" class="{% if active == 'rooms' %}active{% endif %}"><i class="bi bi-door-open"></i> Rooms</a>
+      <a href="{% url 'adminpanel:booking_manage' %}" class="{% if active == 'bookings' %}active{% endif %}"><i class="bi bi-calendar-check"></i> Bookings</a>
+      <a href="{% url 'adminpanel:user_manage' %}" class="{% if active == 'users' %}active{% endif %}"><i class="bi bi-people"></i> Users</a>
+      <a href="{% url 'adminpanel:review_manage' %}" class="{% if active == 'reviews' %}active{% endif %}"><i class="bi bi-chat-quote"></i> Reviews</a>
+      <a href="{% url 'adminpanel:reports' %}" class="{% if active == 'reports' %}active{% endif %}"><i class="bi bi-file-earmark-bar-graph"></i> Reports</a>
+      <hr style="border-color:var(--cream-deep);">
+      <a href="{% url 'admin:index' %}" target="_blank"><i class="bi bi-gear"></i> Django Admin</a>
+    </div>
+    <div>
+      {% block admin_content %}{% endblock %}
+    </div>
+  </div>
+</section>
+{% endblock %}

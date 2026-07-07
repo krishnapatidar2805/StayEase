@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}FAQ{% endblock %}
+{% block content %}
+<section class="section">
+  <div class="container-narrow" style="max-width:760px;">
+    <p class="eyebrow">Help center</p>
+    <h1>Frequently asked questions</h1>
+    <div class="divider-gold"></div>
+    <div style="margin-top:20px;">
+      {% for q, a in faqs %}
+      <div class="panel" style="margin-bottom:14px;">
+        <h3 style="font-size:1.05rem;"><i class="bi bi-question-circle" style="color:var(--gold);"></i> {{ q }}</h3>
+        <p style="color:var(--ink-60); margin:8px 0 0;">{{ a }}</p>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="panel" style="text-align:center; margin-top:30px;">
+      <p style="color:var(--ink-60);">Still have a question? Ask StayBot using the chat icon, or</p>
+      <a href="{% url 'core:contact' %}" class="btn btn-navy">Contact Us</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

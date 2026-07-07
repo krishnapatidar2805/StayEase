@@ -1,0 +1,33 @@
+{% extends "adminpanel/base_admin.html" %}
+{% block title %}Manage Reviews{% endblock %}
+{% block admin_content %}
+<p class="eyebrow">Review management</p>
+<h1>All reviews <span style="font-size:1rem; color:var(--ink-60);">— AI sentiment auto-tagged</span></h1>
+<div class="divider-gold"></div>
+<div class="panel" style="margin-bottom:16px;">
+  <form method="get" style="display:flex; gap:10px;">
+    <select name="sentiment" class="form-select" style="max-width:220px;" onchange="this.form.submit()">
+      <option value="">All sentiments</option>
+      <option value="positive" {% if sentiment == 'positive' %}selected{% endif %}>Positive</option>
+      <option value="neutral" {% if sentiment == 'neutral' %}selected{% endif %}>Neutral</option>
+      <option value="negative" {% if sentiment == 'negative' %}selected{% endif %}>Negative</option>
+    </select>
+  </form>
+</div>
+<div class="panel">
+  <table class="table-clean">
+    <thead><tr><th>Room</th><th>User</th><th>Rating</th><th>Comment</th><th>AI Sentiment</th><th>Score</th><th></th></tr></thead>
+    <tbody>
+      {% for r in reviews %}
+      <tr>
+        <td>{{ r.room.name }}</td><td>{{ r.user.username }}</td><td>{{ r.rating }}★</td>
+        <td style="max-width:260px;">{{ r.comment|truncatewords:12 }}</td>
+        <td><span class="badge-soft badge-{{ r.sentiment }}">{{ r.get_sentiment_display }}</span></td>
+        <td>{{ r.sentiment_score }}</td>
+        <td><a href="{% url 'adminpanel:review_delete' r.pk %}" class="btn btn-sm btn-danger" onclick="return confirm('Delete this review?')"><i class="bi bi-trash"></i></a></td>
+      </tr>
+      {% empty %}<tr><td colspan="7" style="text-align:center; color:var(--ink-60);">No reviews yet.</td></tr>{% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

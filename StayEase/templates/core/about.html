@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}About{% endblock %}
+{% block content %}
+<section class="section">
+  <div class="container-narrow" style="max-width:820px;">
+    <p class="eyebrow">Our story</p>
+    <h1>Hospitality, made intelligent.</h1>
+    <div class="divider-gold"></div>
+    <p style="color:var(--ink-60); font-size:1.05rem;">StayEase was built to remove the guesswork from hotel booking. Instead of scrolling through endless listings, our AI recommendation engine reads your budget, party size, and travel purpose to surface the rooms that actually fit — while our chatbot, StayBot, is on call around the clock for quick answers.</p>
+
+    <div class="room-grid" style="margin-top:40px; grid-template-columns: repeat(auto-fit,minmax(220px,1fr));">
+      <div class="panel"><i class="bi bi-cpu" style="font-size:1.6rem;color:var(--gold);"></i><h3>Smart Matching</h3><p style="color:var(--ink-60); font-size:.9rem;">A weighted scoring engine ranks rooms against your stated preferences.</p></div>
+      <div class="panel"><i class="bi bi-chat-dots" style="font-size:1.6rem;color:var(--gold);"></i><h3>AI Concierge</h3><p style="color:var(--ink-60); font-size:.9rem;">StayBot answers common questions instantly, any time of day.</p></div>
+      <div class="panel"><i class="bi bi-emoji-smile" style="font-size:1.6rem;color:var(--gold);"></i><h3>Sentiment Insight</h3><p style="color:var(--ink-60); font-size:.9rem;">Every review is automatically classified so guests see real, honest feedback.</p></div>
+      <div class="panel"><i class="bi bi-shield-check" style="font-size:1.6rem;color:var(--gold);"></i><h3>Secure Payments</h3><p style="color:var(--ink-60); font-size:.9rem;">UPI &amp; card payments with instant confirmation and PDF invoices.</p></div>
+    </div>
+  </div>
+</section>
+{% endblock %}

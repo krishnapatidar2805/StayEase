@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Sign Up{% endblock %}
+{% block content %}
+<section class="auth-wrap">
+  <div class="auth-card">
+    <div class="panel">
+      <p class="eyebrow">Join StayEase</p>
+      <h2>Create your account</h2>
+      <div class="divider-gold"></div>
+      <form method="post">
+        {% csrf_token %}
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div><label class="form-label">First Name</label>{{ form.first_name }}</div>
+          <div><label class="form-label">Last Name</label>{{ form.last_name }}</div>
+        </div>
+        <div style="margin-top:12px;"><label class="form-label">Username</label>{{ form.username }}</div>
+        <div style="margin-top:12px;"><label class="form-label">Email</label>{{ form.email }}</div>
+        <div style="margin-top:12px;">
+          <label class="form-label">Phone Number</label>{{ form.phone }}
+          <div style="font-size:.78rem; color:var(--ink-60); margin-top:4px;">{{ form.phone.help_text }}</div>
+        </div>
+        <div style="margin-top:12px;"><label class="form-label">Password</label>{{ form.password }}</div>
+        <div style="margin-top:12px;"><label class="form-label">Confirm Password</label>{{ form.confirm_password }}</div>
+        {% if form.errors %}<div class="alert-box alert-danger" style="margin-top:12px;">{{ form.errors }}</div>{% endif %}
+        <button type="submit" class="btn btn-gold btn-block" style="margin-top:18px;">Create Account</button>
+      </form>
+      <p style="text-align:center; margin-top:16px; font-size:.9rem;">Already have an account? <a href="{% url 'accounts:login' %}" class="link-gold">Log in</a></p>
+    </div>
+  </div>
+</section>
+{% endblock %}

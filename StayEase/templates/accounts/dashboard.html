@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}My Dashboard{% endblock %}
+{% block content %}
+<section class="section">
+  <div class="container-narrow">
+    <p class="eyebrow">Welcome back</p>
+    <h1>{{ user.first_name|default:user.username }}'s Dashboard</h1>
+    <div class="divider-gold"></div>
+
+    <div class="room-grid" style="grid-template-columns: repeat(auto-fit,minmax(180px,1fr)); margin-bottom:34px;">
+      <div class="dash-stat"><div class="num">{{ total_bookings }}</div><div class="lbl">Total Bookings</div></div>
+      <div class="dash-stat"><div class="num">{{ wishlist.count }}</div><div class="lbl">Wishlist Items</div></div>
+      <div class="dash-stat"><div class="num">{{ payments.count }}</div><div class="lbl">Payments Made</div></div>
+    </div>
+
+    <div style="display:grid; grid-template-columns: 2fr 1fr; gap:26px;">
+      <div>
+        <div class="panel" style="margin-bottom:24px;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h3>Recent Bookings</h3>
+            <a href="{% url 'bookings:history' %}" class="link-gold" style="font-size:.85rem;">View all &rarr;</a>
+          </div>
+          <table class="table-clean">
+            <thead><tr><th>Room</th><th>Dates</th><th>Status</th><th></th></tr></thead>
+            <tbody>
+              {% for b in bookings %}
+              <tr>
+                <td>{{ b.room.name }}</td>
+                <td>{{ b.check_in|date:"d M" }} - {{ b.check_out|date:"d M" }}</td>
+                <td>
+                  {% if b.status == 'pending' and b.payment.status == 'success' %}
+                  <span class="badge-soft badge-pending"><i class="bi bi-hourglass-split"></i> Awaiting Confirmation</span>
+                  {% else %}
+                  <span class="badge-soft badge-{{ b.status }}">{{ b.get_status_display }}</span>
+                  {% endif %}
+                </td>
+                <td><a href="{% url 'bookings:invoice' b.booking_id %}" class="btn btn-sm btn-outline"><i class="bi bi-download"></i></a></td>
+              </tr>
+              {% empty %}
+              <tr><td colspan="4" style="text-align:center; color:var(--ink-60);">No bookings yet — <a href="{% url 'rooms:list' %}" class="link-gold">browse rooms</a></td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        <div class="panel">
+          <h3><i class="bi bi-stars" style="color:var(--gold);"></i> Recommended for you</h3>
+          <p style="font-size:.85rem; color:var(--ink-60);">AI-personalized suggestions based on your bookings &amp; wishlist.</p>
+          <div class="room-grid" style="grid-template-columns: repeat(auto-fit,minmax(180px,1fr)); margin-top:14px;">
+            {% for room in suggestions %}
+            {% include "partials/room_card.html" with room=room %}
+            {% empty %}
+            <p style="color:var(--ink-60); font-size:.9rem;">Book a room to unlock personalized suggestions.</p>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="panel" style="margin-bottom:24px;">
+          <h3>Quick Links</h3>
+          <a href="{% url 'accounts:profile' %}" class="btn btn-outline btn-block" style="margin-bottom:10px;"><i class="bi bi-person"></i> Edit Profile</a>
+          <a href="{% url 'bookings:history' %}" class="btn btn-outline btn-block" style="margin-bottom:10px;"><i class="bi bi-calendar-check"></i> Booking History</a>
+          <a href="{% url 'accounts:change_password' %}" class="btn btn-outline btn-block"><i class="bi bi-shield-lock"></i> Change Password</a>
+        </div>
+
+        <div class="panel">
+          <h3>Wishlist</h3>
+          {% for w in wishlist %}
+          <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--cream-deep);">
+            <a href="{% url 'rooms:detail' w.room.pk %}">{{ w.room.name }}</a>
+            <span>₹{{ w.room.price_per_night|floatformat:0 }}</span>
+          </div>
+          {% empty %}
+          <p style="color:var(--ink-60); font-size:.9rem;">No rooms wishlisted yet.</p>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

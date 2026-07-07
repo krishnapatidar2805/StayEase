@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}My Profile{% endblock %}
+{% block content %}
+<section class="section">
+  <div class="container-narrow" style="max-width:640px;">
+    <p class="eyebrow">Account settings</p>
+    <h1>Edit profile</h1>
+    <div class="divider-gold"></div>
+    <div class="panel">
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div><label class="form-label">First Name</label>{{ form.first_name }}</div>
+          <div><label class="form-label">Last Name</label>{{ form.last_name }}</div>
+        </div>
+        <div style="margin-top:12px;"><label class="form-label">Phone</label>{{ form.phone }}</div>
+        <div style="margin-top:12px;"><label class="form-label">Address</label>{{ form.address }}</div>
+        <div style="margin-top:12px;"><label class="form-label">City</label>{{ form.city }}</div>
+        <div style="margin-top:12px;"><label class="form-label">Date of Birth</label>{{ form.date_of_birth }}</div>
+        <div style="margin-top:12px;"><label class="form-label">Profile Photo</label>{{ form.avatar }}</div>
+        <hr style="margin:20px 0; border-color:var(--cream-deep);">
+        <p class="eyebrow">AI recommendation preferences</p>
+        <div style="margin-top:12px;"><label class="form-label">Preferred Room Type</label>{{ form.preferred_room_type }}</div>
+        <div style="margin-top:12px;"><label class="form-label">Preferred Budget / Night</label>{{ form.preferred_budget }}</div>
+        <button type="submit" class="btn btn-gold btn-block" style="margin-top:20px;">Save Changes</button>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}

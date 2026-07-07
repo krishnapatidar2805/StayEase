@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{{ room.name }}{% endblock %}
+{% block content %}
+<section class="section" style="padding-bottom:0;">
+  <div class="container-narrow">
+    <div class="room-banner {{ room.tone_class }}" style="height:280px; border-radius:16px; font-size:5rem;">
+      <img src="{% static room.tone_image %}" alt="{{ room.name }}">
+      <span class="price-tag" style="font-size:1rem; padding:8px 16px;">₹{{ room.price_per_night|floatformat:0 }}/night</span>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container-narrow" style="display:grid; grid-template-columns:1.6fr 1fr; gap:34px; align-items:flex-start;">
+    <div>
+      <span class="badge-soft" style="background:var(--cream-deep); color:var(--navy);">{{ room.category.name }}</span>
+      <h1 style="margin-top:10px;">{{ room.name }}</h1>
+      <div class="room-meta" style="font-size:.95rem;">
+        <span><i class="bi bi-people"></i> Up to {{ room.capacity }} guests</span>
+        <span><i class="bi bi-door-open"></i> {{ room.beds }} bed{{ room.beds|pluralize }}</span>
+        <span><i class="bi bi-rulers"></i> {{ room.size_sqft }} sqft</span>
+        <span class="rating-pill"><i class="bi bi-star-fill"></i> {{ room.average_rating }}</span>
+      </div>
+      <p style="margin-top:18px; color:var(--ink-60); font-size:1.02rem;">{{ room.description }}</p>
+
+      <h3 style="margin-top:26px;">Amenities</h3>
+      <div style="display:flex; flex-wrap:wrap; gap:10px; margin-top:10px;">
+        {% for a in room.amenities.all %}
+        <span class="badge-soft" style="background:var(--cream-deep); color:var(--navy);"><i class="bi {{ a.icon }}"></i> {{ a.name }}</span>
+        {% empty %}<span style="color:var(--ink-60); font-size:.9rem;">No amenities listed.</span>{% endfor %}
+      </div>
+
+      <h3 style="margin-top:32px;">Guest reviews</h3>
+      <div class="panel" style="margin-top:12px; display:flex; gap:20px; align-items:center; flex-wrap:wrap;">
+        <div>
+          <b style="font-family:var(--font-display); font-size:2rem; color:var(--navy);">{{ room.average_rating }}</b>
+          <div style="font-size:.8rem; color:var(--ink-60);">{{ sentiment_stats.total }} review{{ sentiment_stats.total|pluralize }}</div>
+        </div>
+        <div style="flex:1; min-width:200px;">
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;"><span class="badge-soft badge-positive" style="width:64px; text-align:center;">Positive</span><div style="flex:1;background:var(--cream-deep);border-radius:6px;height:8px;"><div style="width:{{ sentiment_stats.positive_pct }}%;background:var(--success);height:8px;border-radius:6px;"></div></div><span style="font-size:.78rem;">{{ sentiment_stats.positive_pct }}%</span></div>
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;"><span class="badge-soft badge-neutral" style="width:64px; text-align:center;">Neutral</span><div style="flex:1;background:var(--cream-deep);border-radius:6px;height:8px;"><div style="width:{{ sentiment_stats.neutral_pct }}%;background:#999;height:8px;border-radius:6px;"></div></div><span style="font-size:.78rem;">{{ sentiment_stats.neutral_pct }}%</span></div>
+          <div style="display:flex; align-items:center; gap:8px;"><span class="badge-soft badge-negative" style="width:64px; text-align:center;">Negative</span><div style="flex:1;background:var(--cream-deep);border-radius:6px;height:8px;"><div style="width:{{ sentiment_stats.negative_pct }}%;background:var(--danger);height:8px;border-radius:6px;"></div></div><span style="font-size:.78rem;">{{ sentiment_stats.negative_pct }}%</span></div>
+        </div>
+      </div>
+
+      {% for review in reviews %}
+      <div class="panel" style="margin-top:14px;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <b>{{ review.user.get_full_name|default:review.user.username }}</b>
+          <span class="badge-soft badge-{{ review.sentiment }}">AI: {{ review.get_sentiment_display }}</span>
+        </div>
+        <div class="star-rating" style="margin:6px 0;">{% for i in "12345" %}<i class="bi {% if forloop.counter <= review.rating %}bi-star-fill{% else %}bi-star{% endif %}"></i>{% endfor %}</div>
+        <p style="color:var(--ink-60); margin:0;">{{ review.comment }}</p>
+      </div>
+      {% empty %}
+      <p style="color:var(--ink-60); margin-top:14px;">No reviews yet. Be the first to review this room!</p>
+      {% endfor %}
+
+      {% if user.is_authenticated %}
+      <div class="panel" style="margin-top:20px;">
+        <h3 style="font-size:1rem;">Leave a review</h3>
+        <form method="post" action="{% url 'rooms:add_review' room.pk %}">
+          {% csrf_token %}
+          <label class="form-label">Rating</label>
+          <select class="form-select" name="rating">
+            <option value="5">5 - Excellent</option><option value="4">4 - Good</option>
+            <option value="3">3 - Average</option><option value="2">2 - Poor</option><option value="1">1 - Terrible</option>
+          </select>
+          <div style="margin-top:10px;"><label class="form-label">Comment</label><textarea class="form-control" name="comment" rows="3" required placeholder="Share your experience — our AI will analyze the sentiment automatically."></textarea></div>
+          <button type="submit" class="btn btn-navy" style="margin-top:12px;">Submit Review</button>
+        </form>
+      </div>
+      {% endif %}
+    </div>
+
+    <div>
+      <div class="panel" style="position:sticky; top:96px;">
+        <h3 style="font-family:var(--font-display); font-size:1.8rem;">₹{{ room.price_per_night|floatformat:0 }} <span style="font-size:.9rem; color:var(--ink-60); font-family:var(--font-body);">/night</span></h3>
+        {% if room.is_available %}
+        <a href="{% url 'bookings:book_room' room.pk %}" class="btn btn-gold btn-block" style="margin-top:14px;">Book This Room</a>
+        {% else %}
+        <button class="btn btn-outline btn-block" disabled style="margin-top:14px;">Currently Unavailable</button>
+        {% endif %}
+        {% if user.is_authenticated %}
+        <a href="{% url 'rooms:toggle_wishlist' room.pk %}" data-url="{% url 'rooms:toggle_wishlist' room.pk %}" class="btn btn-outline btn-block wishlist-btn {% if is_wishlisted %}active{% endif %}" style="margin-top:10px;">
+          <i class="bi {% if is_wishlisted %}bi-heart-fill{% else %}bi-heart{% endif %}"></i> {% if is_wishlisted %}Wishlisted{% else %}Add to Wishlist{% endif %}
+        </a>
+        {% endif %}
+      </div>
+
+      {% if similar_rooms %}
+      <div style="margin-top:24px;">
+        <h3 style="font-size:1rem;"><i class="bi bi-stars" style="color:var(--gold);"></i> Similar rooms</h3>
+        {% for r in similar_rooms %}
+        <a href="{% url 'rooms:detail' r.pk %}" class="panel" style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
+          <span>{{ r.name }}</span><b>₹{{ r.price_per_night|floatformat:0 }}</b>
+        </a>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% endblock %}

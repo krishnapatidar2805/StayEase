@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Booking {{ booking.get_status_display }}{% endblock %}
+{% block content %}
+<section class="section">
+  <div class="container-narrow" style="max-width:560px; text-align:center;">
+    {% if booking.status == 'confirmed' %}
+      <i class="bi bi-check-circle-fill" style="font-size:3rem; color:var(--success);"></i>
+      <h1>Booking confirmed!</h1>
+      <p style="color:var(--ink-60);">Your stay at <b>{{ booking.room.name }}</b> is all set.</p>
+    {% elif booking.status == 'cancelled' %}
+      <i class="bi bi-x-circle-fill" style="font-size:3rem; color:var(--danger);"></i>
+      <h1>Booking cancelled</h1>
+      <p style="color:var(--ink-60);">This booking for <b>{{ booking.room.name }}</b> was cancelled.</p>
+    {% else %}
+      <i class="bi bi-hourglass-split" style="font-size:3rem; color:var(--gold);"></i>
+      <h1>Payment received!</h1>
+      <p style="color:var(--ink-60);">Your payment for <b>{{ booking.room.name }}</b> was successful. Your booking is now <b>awaiting confirmation</b> from the hotel — you'll get an email as soon as it's approved.</p>
+    {% endif %}
+
+    <div class="panel keycard" style="text-align:left; margin-top:24px;">
+      <div class="stripe"></div>
+      <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>Booking ID</span><b>{{ booking.booking_id }}</b></div>
+      <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>Room</span><b>{{ booking.room.name }}</b></div>
+      <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>Check-in</span><b>{{ booking.check_in }}</b></div>
+      <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>Check-out</span><b>{{ booking.check_out }}</b></div>
+      <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>Status</span><span class="badge-soft badge-{{ booking.status }}">{{ booking.get_status_display }}</span></div>
+      <div style="display:flex; justify-content:space-between;"><span>Total Paid</span><b>₹{{ booking.total_amount|floatformat:0 }}</b></div>
+    </div>
+
+    <div style="margin-top:24px; display:flex; gap:12px; justify-content:center;">
+      <a href="{% url 'bookings:invoice' booking.booking_id %}" class="btn btn-navy"><i class="bi bi-download"></i> Download Invoice</a>
+      <a href="{% url 'accounts:dashboard' %}" class="btn btn-outline">Go to Dashboard</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

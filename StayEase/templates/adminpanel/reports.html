@@ -1,0 +1,34 @@
+{% extends "adminpanel/base_admin.html" %}
+{% block title %}Reports{% endblock %}
+{% block admin_content %}
+<p class="eyebrow">Analytics</p>
+<h1>Reports</h1>
+<div class="divider-gold"></div>
+
+<div class="room-grid" style="grid-template-columns: repeat(auto-fit,minmax(180px,1fr)); margin-bottom:26px;">
+  <div class="dash-stat"><div class="num">{{ total_bookings }}</div><div class="lbl">Total Bookings</div></div>
+  <div class="dash-stat"><div class="num">₹{{ total_revenue|floatformat:0 }}</div><div class="lbl">Total Revenue</div></div>
+  <div class="dash-stat"><div class="num">{{ total_customers }}</div><div class="lbl">Total Customers</div></div>
+  <div class="dash-stat"><div class="num">{{ total_rooms }}</div><div class="lbl">Total Rooms</div></div>
+</div>
+
+<div class="panel" style="margin-bottom:20px;">
+  <h3>Export reports</h3>
+  <div style="display:flex; gap:12px; margin-top:12px;">
+    <a href="{% url 'adminpanel:export_bookings_excel' %}" class="btn btn-navy"><i class="bi bi-file-earmark-excel"></i> Bookings (Excel)</a>
+    <a href="{% url 'adminpanel:export_revenue_pdf' %}" class="btn btn-outline"><i class="bi bi-file-earmark-pdf"></i> Revenue (PDF)</a>
+  </div>
+</div>
+
+<div class="panel">
+  <h3>Bookings by category</h3>
+  <table class="table-clean">
+    <thead><tr><th>Category</th><th>Bookings</th></tr></thead>
+    <tbody>
+      {% for cat in category_breakdown %}
+      <tr><td>{{ cat.name }}</td><td>{{ cat.booking_count }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

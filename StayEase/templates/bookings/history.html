@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}My Bookings{% endblock %}
+{% block content %}
+<section class="section">
+  <div class="container-narrow">
+    <p class="eyebrow">Your stays</p>
+    <h1>Booking history</h1>
+    <div class="divider-gold"></div>
+
+    <div class="panel">
+      <table class="table-clean">
+        <thead><tr><th>Room</th><th>Check-in</th><th>Check-out</th><th>Status</th><th>Amount</th><th></th></tr></thead>
+        <tbody>
+          {% for b in bookings %}
+          <tr>
+            <td>{{ b.room.name }}</td>
+            <td>{{ b.check_in }}</td>
+            <td>{{ b.check_out }}</td>
+            <td>
+              {% if b.status == 'pending' and b.payment.status == 'success' %}
+              <span class="badge-soft badge-pending"><i class="bi bi-hourglass-split"></i> Awaiting Confirmation</span>
+              {% else %}
+              <span class="badge-soft badge-{{ b.status }}">{{ b.get_status_display }}</span>
+              {% endif %}
+            </td>
+            <td>₹{{ b.total_amount|floatformat:0 }}</td>
+            <td style="display:flex; gap:6px;">
+              <a href="{% url 'bookings:invoice' b.booking_id %}" class="btn btn-sm btn-outline"><i class="bi bi-download"></i></a>
+              {% if b.status == 'pending' or b.status == 'confirmed' %}
+              <a href="{% url 'bookings:cancel' b.booking_id %}" class="btn btn-sm btn-danger" onclick="return confirm('Cancel this booking?')"><i class="bi bi-x-circle"></i></a>
+              {% endif %}
+            </td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="6" style="text-align:center; color:var(--ink-60);">No bookings yet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+{% endblock %}

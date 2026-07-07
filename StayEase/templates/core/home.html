@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Home{% endblock %}
+{% block content %}
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="fade-up">
+      <p class="eyebrow">AI-Powered Hotel Booking</p>
+      <h1>Find your perfect stay,<br>picked by AI.</h1>
+      <p class="lead">StayEase blends boutique hospitality with a smart recommendation engine — tell us your budget and purpose of travel, and we'll match you to the room that fits.</p>
+      <div style="margin-top:26px; display:flex; gap:14px; flex-wrap:wrap;">
+        <a href="{% url 'rooms:list' %}" class="btn btn-gold">Browse Rooms <i class="bi bi-arrow-right"></i></a>
+        <a href="{% url 'rooms:recommend' %}" class="btn btn-outline" style="border-color:rgba(250,246,238,.4); color:#fff;">Ask the AI <i class="bi bi-stars"></i></a>
+      </div>
+      <div class="stat-strip">
+        <div class="stat"><b>{{ total_rooms }}+</b><span>Rooms Listed</span></div>
+        <div class="stat"><b>24/7</b><span>AI Concierge</span></div>
+        <div class="stat"><b>4.8<i class="bi bi-star-fill" style="font-size:1rem;"></i></b><span>Avg. Rating</span></div>
+      </div>
+    </div>
+
+    <div class="hero-illustration fade-up-2">
+      <img src="{% static 'img/hotel-hero.svg' %}" alt="StayEase hotel illustration" style="width:100%; display:block;">
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:50px;">
+  <div class="container-narrow">
+    <div class="keycard fade-up-1" style="max-width:640px; margin: -110px auto 0;">
+      <div class="stripe"></div>
+      <form class="keycard-form" action="{% url 'rooms:list' %}" method="get">
+        <label>Search rooms</label>
+        <input type="text" name="q" placeholder="e.g. Deluxe Suite">
+        <div class="row-2">
+          <div>
+            <label>Min guests</label>
+            <input type="number" name="capacity" min="1" placeholder="2">
+          </div>
+          <div>
+            <label>Max budget / night</label>
+            <input type="number" name="max_price" placeholder="5000">
+          </div>
+        </div>
+        <button type="submit" class="btn btn-navy btn-block"><i class="bi bi-search"></i> Search Rooms</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<section class="section" data-aos>
+  <div class="container-narrow">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Handpicked for you</p>
+        <h2>Featured rooms</h2>
+        <div class="divider-gold"></div>
+      </div>
+      <a href="{% url 'rooms:list' %}" class="btn btn-outline btn-sm">View all rooms</a>
+    </div>
+
+    <div class="room-grid">
+      {% for room in featured_rooms %}
+      {% include "partials/room_card.html" with room=room %}
+      {% empty %}
+      <div class="empty-state"><i class="bi bi-door-closed"></i><p>No rooms yet — check back soon, or log in as admin to add rooms.</p></div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt" data-aos>
+  <div class="container-narrow">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Explore by type</p>
+        <h2>Room categories</h2>
+        <div class="divider-gold"></div>
+      </div>
+    </div>
+    <div class="room-grid" style="grid-template-columns: repeat(auto-fill, minmax(220px,1fr));">
+      {% for cat in categories %}
+      <a href="{% url 'rooms:list' %}?category={{ cat.id }}" class="panel" style="text-align:center; display:block;">
+        <i class="bi {{ cat.icon }}" style="font-size:2rem; color:var(--gold);"></i>
+        <h3 style="margin-top:10px;">{{ cat.name }}</h3>
+        <p style="font-size:.85rem; color:var(--ink-60);">{{ cat.rooms.count }} room{{ cat.rooms.count|pluralize }}</p>
+      </a>
+      {% empty %}
+      <p style="color:var(--ink-60);">Categories will appear here once added by the admin.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section" data-aos>
+  <div class="container-narrow">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">AI Feature</p>
+        <h2>Not sure which room to pick?</h2>
+        <div class="divider-gold"></div>
+      </div>
+    </div>
+    <div class="panel" style="display:flex; align-items:center; justify-content:space-between; gap:24px; flex-wrap:wrap;">
+      <div style="max-width:520px;">
+        <h3><i class="bi bi-stars" style="color:var(--gold);"></i> Let our AI recommend a room</h3>
+        <p style="color:var(--ink-60);">Tell us your budget, number of guests, room type and purpose of stay — our recommendation engine scores every room and ranks the best matches for you.</p>
+      </div>
+      <a href="{% url 'rooms:recommend' %}" class="btn btn-gold">Try AI Recommendation</a>
+    </div>
+  </div>
+</section>
+
+{% if top_reviews %}
+<section class="section section-alt" data-aos>
+  <div class="container-narrow">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">What guests say</p>
+        <h2>Loved by travellers</h2>
+        <div class="divider-gold"></div>
+      </div>
+    </div>
+    <div class="room-grid">
+      {% for review in top_reviews %}
+      <div class="panel">
+        <div class="star-rating">
+          {% for i in "12345" %}<i class="bi {% if forloop.counter <= review.rating %}bi-star-fill{% else %}bi-star{% endif %}"></i>{% endfor %}
+          <span class="badge-soft badge-positive" style="margin-left:8px;">AI: Positive</span>
+        </div>
+        <p style="margin:12px 0; color:var(--ink-60);">"{{ review.comment|truncatewords:22 }}"</p>
+        <b>{{ review.user.get_full_name|default:review.user.username }}</b>
+        <div style="font-size:.8rem; color:var(--ink-60);">stayed at {{ review.room.name }}</div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% endblock %}

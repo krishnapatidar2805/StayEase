@@ -1,0 +1,32 @@
+{% extends "adminpanel/base_admin.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block admin_content %}
+<p class="eyebrow">Room management</p>
+<h1>{{ title }}</h1>
+<div class="divider-gold"></div>
+<div class="panel">
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+      <div><label class="form-label">Name</label>{{ form.name }}</div>
+      <div><label class="form-label">Category</label>{{ form.category }}</div>
+    </div>
+    <div style="margin-top:12px;"><label class="form-label">Description</label>{{ form.description }}</div>
+    <div style="margin-top:12px; display:grid; grid-template-columns:repeat(4,1fr); gap:12px;">
+      <div><label class="form-label">Price/Night</label>{{ form.price_per_night }}</div>
+      <div><label class="form-label">Capacity</label>{{ form.capacity }}</div>
+      <div><label class="form-label">Beds</label>{{ form.beds }}</div>
+      <div><label class="form-label">Size (sqft)</label>{{ form.size_sqft }}</div>
+    </div>
+    <div style="margin-top:12px; display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+      <div><label class="form-label">Best For</label>{{ form.best_for }}</div>
+      <div><label class="form-label">Total Units</label>{{ form.total_units }}</div>
+    </div>
+    <div style="margin-top:12px;"><label class="form-label">Thumbnail</label>{{ form.thumbnail }}</div>
+    <div style="margin-top:12px;"><label class="form-label">Amenities</label><div style="display:flex; flex-wrap:wrap; gap:10px;">{{ form.amenities }}</div></div>
+    <div style="margin-top:12px;"><label class="form-label">Rating</label>{{ form.rating }}</div>
+    <div style="margin-top:12px;">{{ form.is_available }} <label style="display:inline;">Available for booking</label></div>
+    <button type="submit" class="btn btn-gold" style="margin-top:18px;">Save Room</button>
+  </form>
+</div>
+{% endblock %}

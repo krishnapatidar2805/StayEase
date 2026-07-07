@@ -1,0 +1,27 @@
+{% load static %}
+<div class="room-card" data-aos>
+  <a href="{% url 'rooms:detail' room.pk %}">
+    <div class="room-banner {{ room.tone_class }}">
+      <img src="{% static room.tone_image %}" alt="{{ room.name }}">
+      <span class="price-tag">₹{{ room.price_per_night|floatformat:0 }}/night</span>
+    </div>
+  </a>
+  <div class="room-body">
+    <a href="{% url 'rooms:detail' room.pk %}" style="color:inherit;">
+      <h3>{{ room.name }}</h3>
+    </a>
+    <span class="badge-soft" style="background:var(--cream-deep); color:var(--navy);">{{ room.category.name }}</span>
+    <div class="room-meta">
+      <span><i class="bi bi-people"></i> {{ room.capacity }} guests</span>
+      <span><i class="bi bi-rulers"></i> {{ room.size_sqft }} sqft</span>
+      <span><i class="bi bi-door-open"></i> {{ room.beds }} bed{{ room.beds|pluralize }}</span>
+    </div>
+    <div class="room-footer">
+      <div>
+        <b style="font-family:var(--font-display); font-size:1.3rem; color:var(--navy);">₹{{ room.price_per_night|floatformat:0 }}</b>
+        <span style="font-size:.78rem; color:var(--ink-60);">/night</span>
+      </div>
+      <span class="rating-pill"><i class="bi bi-star-fill"></i> {{ room.average_rating }}</span>
+    </div>
+  </div>
+</div>

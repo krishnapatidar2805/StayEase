@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Contact{% endblock %}
+{% block content %}
+<section class="section">
+  <div class="container-narrow" style="max-width:640px;">
+    <p class="eyebrow">Get in touch</p>
+    <h1>Contact us</h1>
+    <div class="divider-gold"></div>
+    <div class="panel">
+      <form method="post">
+        {% csrf_token %}
+        <div style="margin-bottom:14px;"><label class="form-label">Name</label><input class="form-control" type="text" name="name" required></div>
+        <div style="margin-bottom:14px;"><label class="form-label">Email</label><input class="form-control" type="email" name="email" required></div>
+        <div style="margin-bottom:14px;"><label class="form-label">Subject</label><input class="form-control" type="text" name="subject" required></div>
+        <div style="margin-bottom:14px;"><label class="form-label">Message</label><textarea class="form-control" name="message" rows="5" required></textarea></div>
+        <button type="submit" class="btn btn-gold btn-block">Send Message <i class="bi bi-send"></i></button>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}

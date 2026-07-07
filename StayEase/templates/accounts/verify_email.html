@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Verify Phone{% endblock %}
+{% block content %}
+<section class="auth-wrap">
+  <div class="auth-card">
+    <div class="panel" style="text-align:center;">
+      <i class="bi bi-phone-vibrate" style="font-size:2.4rem; color:var(--gold);"></i>
+      <h2>Verify your phone number</h2>
+      <p style="color:var(--ink-60);">We sent a 6-digit OTP via SMS to <b>{{ phone }}</b>.<br>
+      <span style="font-size:.8rem;">(If SMS isn't configured yet, check the server console instead.)</span></p>
+      <form method="post">
+        {% csrf_token %}
+        <input class="form-control" type="text" name="otp" placeholder="Enter OTP" maxlength="6" style="text-align:center; letter-spacing:.3em; font-size:1.2rem;" required>
+        <button type="submit" class="btn btn-gold btn-block" style="margin-top:16px;">Verify</button>
+      </form>
+      <form method="post" style="margin-top:10px;">
+        {% csrf_token %}
+        <button type="submit" name="resend" value="1" class="btn btn-outline btn-block btn-sm">Resend OTP</button>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}

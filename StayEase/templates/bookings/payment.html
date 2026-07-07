@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Payment{% endblock %}
+{% block content %}
+<section class="section">
+  <div class="container-narrow" style="max-width:520px;">
+    <p class="eyebrow">Step 2 of 2</p>
+    <h2>Secure payment</h2>
+    <div class="divider-gold"></div>
+    <div class="panel">
+      <div style="display:flex; justify-content:space-between; margin-bottom:6px;"><span>Room</span><b>{{ booking.room.name }}</b></div>
+      <div style="display:flex; justify-content:space-between; margin-bottom:6px;"><span>Nights</span><b>{{ booking.nights }}</b></div>
+      <div style="display:flex; justify-content:space-between; margin-bottom:14px; font-size:1.2rem;"><span>Total</span><b style="color:var(--navy); font-family:var(--font-display);">₹{{ booking.total_amount|floatformat:0 }}</b></div>
+      <hr style="border-color:var(--cream-deep);">
+      <form method="post" style="margin-top:14px;">
+        {% csrf_token %}
+        <label class="form-label">Choose payment method</label>
+        <div style="display:flex; gap:12px; margin-bottom:16px;">
+          <label class="panel" style="flex:1; text-align:center; cursor:pointer;"><input type="radio" name="method" value="upi" checked> <i class="bi bi-phone"></i> UPI</label>
+          <label class="panel" style="flex:1; text-align:center; cursor:pointer;"><input type="radio" name="method" value="card"> <i class="bi bi-credit-card"></i> Card</label>
+        </div>
+        <p style="font-size:.78rem; color:var(--ink-60);"><i class="bi bi-shield-check"></i> This is a simulated payment gateway for demo purposes — no real money is charged.</p>
+        <button type="submit" class="btn btn-gold btn-block">Pay ₹{{ booking.total_amount|floatformat:0 }} <i class="bi bi-lock-fill"></i></button>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}
