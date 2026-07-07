@@ -1,0 +1,15 @@
+*.py[cod]
+*$py.class
+__pycache__/
+db.sqlite3
+media/
+staticfiles/
+.env
+.DS_Store
+*.local
+build/
+dist/
+*.egg-info/
+/StayEase/db.sqlite3
+/StayEase/staticfiles/
+/StayEase/media/
