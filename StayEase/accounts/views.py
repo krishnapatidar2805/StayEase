@@ -27,21 +27,15 @@ def register_view(request):
             user.is_active = True
             user.save()
 
-            otp = f"{random.randint(100000, 999999)}"
-            profile = user.profile
-            profile.phone = form.cleaned_data['phone']
-            profile.email_otp = otp  # reused as the general OTP field (works for phone too)
+            profile, _ = UserProfile.objects.get_or_create(user=user)
+            profile.phone = form.cleaned_data.get('phone', '')
+            profile.is_email_verified = True
+            profile.email_otp = ''
             profile.save()
 
-            sent_via_sms = send_otp_sms(profile.phone, otp)
-
-            if sent_via_sms:
-                messages.success(request, f'Account created! An OTP has been sent via SMS to {profile.phone}.')
-            else:
-                messages.success(request, 'Account created! SMS isn\'t configured yet, so check the server console for your OTP (dev mode).')
-
-            request.session['verify_user_id'] = user.id
-            return redirect('accounts:verify_email')
+            login(request, user)
+            messages.success(request, f'Account created successfully! Welcome to StayEase, {user.first_name or user.username}!')
+            return redirect('core:home')
     else:
         form = RegisterForm()
 
@@ -49,37 +43,7 @@ def register_view(request):
 
 
 def verify_email_view(request):
-    user_id = request.session.get('verify_user_id')
-    if not user_id:
-        return redirect('accounts:login')
-
-    profile = UserProfile.objects.filter(user_id=user_id).first()
-
-    if request.method == 'POST':
-        if 'resend' in request.POST:
-            if profile:
-                otp = f"{random.randint(100000, 999999)}"
-                profile.email_otp = otp
-                profile.save()
-                send_otp_sms(profile.phone, otp)
-                messages.success(request, 'A new OTP has been sent.')
-            return redirect('accounts:verify_email')
-
-        otp = request.POST.get('otp', '')
-        if not profile:
-            return redirect('accounts:login')
-
-        if profile.email_otp == otp:
-            profile.is_email_verified = True
-            profile.email_otp = ''
-            profile.save()
-            messages.success(request, 'Phone number verified successfully! You can now log in.')
-            del request.session['verify_user_id']
-            return redirect('accounts:login')
-        else:
-            messages.error(request, 'Invalid OTP. Please try again.')
-
-    return render(request, 'accounts/verify_email.html', {'phone': profile.phone if profile else ''})
+    return redirect('core:home')
 
 
 def login_view(request):
@@ -89,22 +53,30 @@ def login_view(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
-            identifier = form.cleaned_data['username']
+            identifier = form.cleaned_data['username'].strip()
             password = form.cleaned_data['password']
 
             username = identifier
+            # Check if identifier is an email
             if '@' in identifier:
-                try:
-                    username = User.objects.get(email=identifier).username
-                except User.DoesNotExist:
-                    username = identifier
+                user_by_email = User.objects.filter(email__iexact=identifier).first()
+                if user_by_email:
+                    username = user_by_email.username
+            else:
+                # Check if identifier is a phone number
+                clean_phone = identifier.replace(' ', '').replace('-', '')
+                if (clean_phone.isdigit() or clean_phone.startswith('+')) and len(clean_phone) >= 10:
+                    profile_by_phone = UserProfile.objects.filter(phone__endswith=clean_phone[-10:]).first()
+                    if profile_by_phone:
+                        username = profile_by_phone.user.username
 
             user = authenticate(request, username=username, password=password)
             if user:
-                if not user.is_staff and not user.profile.is_email_verified:
-                    request.session['verify_user_id'] = user.id
-                    messages.error(request, 'Please verify your phone number with the OTP before logging in.')
-                    return redirect('accounts:verify_email')
+                # Ensure profile exists and is verified so login is never blocked
+                profile, _ = UserProfile.objects.get_or_create(user=user)
+                if not profile.is_email_verified:
+                    profile.is_email_verified = True
+                    profile.save()
 
                 login(request, user)
                 messages.success(request, f'Welcome back, {user.first_name or user.username}!')
@@ -112,6 +84,7 @@ def login_view(request):
                 return redirect(next_url or 'core:home')
             else:
                 messages.error(request, 'Invalid username/email or password.')
+                form.add_error(None, 'Invalid username/email or password.')
     else:
         form = LoginForm()
 

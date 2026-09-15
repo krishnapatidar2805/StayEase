@@ -6,8 +6,8 @@ from .models import UserProfile
 class RegisterForm(forms.ModelForm):
     phone = forms.CharField(
         max_length=15,
-        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': '+91XXXXXXXXXX'}),
-        help_text='Include country code, e.g. +91XXXXXXXXXX — OTP will be sent here.'
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Mobile Number (optional)'}),
     )
     password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'}))
     confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Confirm Password'}))
@@ -28,19 +28,21 @@ class RegisterForm(forms.ModelForm):
             raise forms.ValidationError("Passwords do not match.")
         return cleaned
 
+    def clean_username(self):
+        username = self.cleaned_data.get('username', '').strip()
+        if User.objects.filter(username__iexact=username).exists():
+            raise forms.ValidationError("A user with this username already exists.")
+        return username
+
     def clean_email(self):
-        email = self.cleaned_data['email']
-        if User.objects.filter(email=email).exists():
+        email = self.cleaned_data.get('email', '').strip().lower()
+        if User.objects.filter(email__iexact=email).exists():
             raise forms.ValidationError("An account with this email already exists.")
         return email
 
     def clean_phone(self):
-        phone = self.cleaned_data['phone'].strip()
-        if not phone.startswith('+'):
-            raise forms.ValidationError("Include country code, e.g. +91XXXXXXXXXX")
-        if UserProfile.objects.filter(phone=phone).exists():
-            raise forms.ValidationError("An account with this phone number already exists.")
-        return phone
+        raw_phone = self.cleaned_data.get('phone', '').strip().replace(' ', '').replace('-', '')
+        return raw_phone
 
 
 class LoginForm(forms.Form):
