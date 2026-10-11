@@ -2,7 +2,7 @@ def site_context(request):
     """Global template variables available on every page."""
     context = {
         'SITE_NAME': 'StayEase',
-        'SITE_TAGLINE': 'AI-Powered Hotel Booking & Management',
+        'SITE_TAGLINE': 'Hotel Booking & Management',
     }
 
     if getattr(request, 'user', None) and request.user.is_authenticated and request.user.is_staff:

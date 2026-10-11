@@ -1,4 +1,4 @@
-# StayEase — AI-Powered Hotel Booking & Management System
+# StayEase — Hotel Booking & Management System
 
 A full-stack hotel booking platform built with **Python, Django, HTML/CSS/JS**,
 featuring a smart AI room-recommendation engine, an AI support chatbot, and
