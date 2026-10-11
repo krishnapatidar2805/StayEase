@@ -21,7 +21,6 @@
       <a href="{% url 'rooms:list' %}">Rooms</a>
       <a href="{% url 'rooms:recommend' %}"><i class="bi bi-stars"></i> AI Recommend</a>
       <a href="{% url 'core:about' %}">About</a>
-      <a href="{% url 'core:faq' %}">FAQ</a>
       <a href="{% url 'core:contact' %}">Contact</a>
       {% if user.is_authenticated %}
         {% if user.is_staff %}<a href="{% url 'adminpanel:dashboard' %}"><i class="bi bi-speedometer2"></i> Admin</a>{% endif %}
@@ -87,7 +86,6 @@
     </div>
     <div>
       <h4>Support</h4>
-      <a href="{% url 'core:faq' %}">FAQs</a>
       <a href="{% url 'core:contact' %}">Contact Us</a>
       <a href="{% url 'bookings:history' %}">My Bookings</a>
     </div>

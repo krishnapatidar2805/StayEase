@@ -3,6 +3,12 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+try:
+    from PIL import Image
+    _ImageField = models.ImageField
+except ImportError:
+    _ImageField = models.FileField
+
 
 class UserProfile(models.Model):
     """Extended profile information for every registered user."""
@@ -11,7 +17,7 @@ class UserProfile(models.Model):
     phone = models.CharField(max_length=15, blank=True)
     address = models.CharField(max_length=255, blank=True)
     city = models.CharField(max_length=100, blank=True)
-    avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)
+    avatar = _ImageField(upload_to='avatars/', blank=True, null=True)
     date_of_birth = models.DateField(null=True, blank=True)
     is_email_verified = models.BooleanField(default=False)
     email_otp = models.CharField(max_length=6, blank=True)

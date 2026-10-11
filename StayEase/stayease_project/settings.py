@@ -2,8 +2,12 @@
 Django settings for StayEase project.
 """
 import os
-import dj_database_url
 from pathlib import Path
+
+try:
+    import dj_database_url
+except ImportError:
+    dj_database_url = None
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -34,7 +38,17 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+]
+
+try:
+    import whitenoise
+    HAS_WHITENOISE = True
+    if not DEBUG:
+        MIDDLEWARE.append('whitenoise.middleware.WhiteNoiseMiddleware')
+except ImportError:
+    HAS_WHITENOISE = False
+
+MIDDLEWARE += [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -70,7 +84,7 @@ WSGI_APPLICATION = 'stayease_project.wsgi.application'
 # the original spec) set USE_MYSQL=1 as an environment variable and fill in
 # the credentials below, then: pip install mysqlclient
 # ---------------------------------------------------------------------------
-if os.environ.get('DATABASE_URL'):
+if os.environ.get('DATABASE_URL') and dj_database_url:
     DATABASES = {
         'default': dj_database_url.config(
             default=os.environ.get('DATABASE_URL'),
@@ -109,12 +123,13 @@ TIME_ZONE = 'Asia/Kolkata'
 USE_I18N = True
 USE_TZ = True
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedCopyWithoutManifestStaticFilesStorage'
+if not DEBUG and HAS_WHITENOISE:
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedCopyWithoutManifestStaticFilesStorage'
 
-MEDIA_URL = 'media/'
+MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

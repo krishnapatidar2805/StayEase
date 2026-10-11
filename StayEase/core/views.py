@@ -25,15 +25,7 @@ def about_view(request):
 
 
 def faq_view(request):
-    faqs = [
-        ("What time is check-in and check-out?", "Check-in is from 12:00 PM and check-out is by 11:00 AM."),
-        ("Can I cancel my booking?", "Yes, free cancellation up to 24 hours before check-in from your dashboard."),
-        ("What payment methods are supported?", "We support UPI and Credit/Debit cards."),
-        ("Is breakfast included?", "Most rooms include complimentary breakfast — check the room's amenity list."),
-        ("How do I get my invoice?", "Download a PDF invoice anytime from 'My Bookings' in your dashboard."),
-        ("Do you offer family or group rooms?", "Yes — use the guest-count filter on the Rooms page to find rooms that fit your group."),
-    ]
-    return render(request, 'core/faq.html', {'faqs': faqs})
+    return redirect('core:home')
 
 
 def contact_view(request):

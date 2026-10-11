@@ -45,7 +45,8 @@
         {% for room, score, reasons in results %}
         <div class="room-card">
           <a href="{% url 'rooms:detail' room.pk %}">
-            <div class="room-banner {{ room.tone_class }}"><img src="{% static room.tone_image %}" alt="{{ room.name }}">
+            <div class="room-banner">
+              <img src="{{ room.image_url }}" alt="{{ room.name }}" loading="lazy">
               <span class="price-tag">Match {{ score }}%</span>
             </div>
           </a>

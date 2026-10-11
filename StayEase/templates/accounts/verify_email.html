@@ -6,11 +6,21 @@
     <div class="panel" style="text-align:center;">
       <i class="bi bi-phone-vibrate" style="font-size:2.4rem; color:var(--gold);"></i>
       <h2>Verify your phone number</h2>
-      <p style="color:var(--ink-60);">We sent a 6-digit OTP via SMS to <b>{{ phone }}</b>.<br>
-      <span style="font-size:.8rem;">(If SMS isn't configured yet, check the server console instead.)</span></p>
-      <form method="post">
+      <p style="color:var(--ink-60);">We sent a 6-digit OTP to <b>{{ phone }}</b>.</p>
+
+      {% if demo_otp %}
+      <div style="background: rgba(212, 163, 89, 0.12); border: 1px dashed var(--gold); border-radius: 8px; padding: 12px; margin: 16px 0;">
+        <div style="font-size: 0.85rem; color: var(--ink-70); margin-bottom: 4px;"><i class="bi bi-info-circle"></i> <b>Demo Mode OTP:</b></div>
+        <div style="font-size: 1.4rem; font-weight: 700; letter-spacing: 4px; color: var(--navy);">{{ demo_otp }}</div>
+        <button type="button" class="btn btn-outline btn-sm" style="margin-top: 8px;" onclick="document.getElementById('otpInput').value='{{ demo_otp }}'; document.getElementById('verifyForm').submit();">
+          <i class="bi bi-magic"></i> Auto-fill &amp; Verify
+        </button>
+      </div>
+      {% endif %}
+
+      <form method="post" id="verifyForm">
         {% csrf_token %}
-        <input class="form-control" type="text" name="otp" placeholder="Enter OTP" maxlength="6" style="text-align:center; letter-spacing:.3em; font-size:1.2rem;" required>
+        <input class="form-control" type="text" id="otpInput" name="otp" placeholder="Enter OTP" maxlength="6" style="text-align:center; letter-spacing:.3em; font-size:1.2rem;" required>
         <button type="submit" class="btn btn-gold btn-block" style="margin-top:16px;">Verify</button>
       </form>
       <form method="post" style="margin-top:10px;">

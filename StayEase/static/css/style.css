@@ -181,9 +181,12 @@ section.section { padding: 72px 24px; }
 .room-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 26px; }
 .room-card { background: #fff; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-card); transition: transform .2s ease, box-shadow .2s ease; position: relative; border: 1px solid var(--cream-deep); }
 .room-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lift); }
-.room-banner { height: 150px; position: relative; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 2.6rem; }
-.room-banner .price-tag { position: absolute; top: 12px; right: 12px; background: var(--gold); color: var(--navy-deep); font-weight: 700; font-size: .82rem; padding: 6px 12px; border-radius: 999px; }
+.room-banner { height: 215px; position: relative; overflow: hidden; display: block; background: var(--navy-deep); }
+.room-banner .price-tag { position: absolute; top: 12px; right: 12px; background: rgba(212,175,55,0.95); backdrop-filter: blur(4px); color: var(--navy-deep); font-weight: 700; font-size: .84rem; padding: 6px 14px; border-radius: 999px; box-shadow: 0 4px 10px rgba(0,0,0,0.25); z-index: 2; }
 .room-banner .notch { position: absolute; left: -10px; top: 50%; width: 20px; height: 20px; background: var(--cream); border-radius: 50%; transform: translateY(-50%); }
+.category-card { transition: transform .3s ease, box-shadow .3s ease; }
+.category-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lift); }
+.category-card:hover img { transform: scale(1.07); }
 .room-body { padding: 18px 20px 20px; }
 .room-body h3 { margin-bottom: 4px; }
 .room-meta { display: flex; gap: 14px; font-size: .82rem; color: var(--ink-60); margin: 8px 0 14px; flex-wrap: wrap; }

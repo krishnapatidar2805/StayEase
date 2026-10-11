@@ -2,11 +2,27 @@
 {% load static %}
 {% block title %}{{ room.name }}{% endblock %}
 {% block content %}
-<section class="section" style="padding-bottom:0;">
+<section class="section" style="padding-bottom:0; padding-top:24px;">
   <div class="container-narrow">
-    <div class="room-banner {{ room.tone_class }}" style="height:280px; border-radius:16px; font-size:5rem;">
-      <img src="{% static room.tone_image %}" alt="{{ room.name }}">
-      <span class="price-tag" style="font-size:1rem; padding:8px 16px;">₹{{ room.price_per_night|floatformat:0 }}/night</span>
+    <div style="position:relative; height:380px; border-radius:18px; overflow:hidden; box-shadow:var(--shadow-lift);">
+      <img src="{{ room.image_url }}" alt="{{ room.name }}" style="width:100%; height:100%; object-fit:cover; display:block;">
+      <div style="position:absolute; inset:0; background:linear-gradient(to top, rgba(15,61,92,0.85) 0%, rgba(15,61,92,0.15) 55%, transparent 100%);"></div>
+      <div style="position:absolute; bottom:24px; left:26px; right:26px; display:flex; justify-content:space-between; align-items:flex-end; color:#fff;">
+        <div>
+          <span class="badge-soft" style="background:rgba(255,255,255,0.22); backdrop-filter:blur(8px); color:#fff; border:1px solid rgba(255,255,255,0.3); font-weight:600;">
+            <i class="bi {{ room.category.icon }}"></i> {{ room.category.name }}
+          </span>
+          <h1 style="color:#fff; margin:8px 0 0 0; text-shadow:0 2px 10px rgba(0,0,0,0.5); font-size:2.2rem;">{{ room.name }}</h1>
+        </div>
+        <span class="price-tag" style="position:static; font-size:1.1rem; padding:10px 20px; box-shadow:0 4px 14px rgba(0,0,0,0.3);">₹{{ room.price_per_night|floatformat:0 }} <small style="font-size:0.8rem; font-weight:normal;">/ night</small></span>
+      </div>
+    </div>
+    <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:14px; margin-top:14px;">
+      {% for img_src in room.gallery_photos %}
+      <div style="height:115px; border-radius:12px; overflow:hidden; box-shadow:var(--shadow-subtle);">
+        <img src="{{ img_src }}" alt="{{ room.name }} gallery preview" style="width:100%; height:100%; object-fit:cover; display:block; transition:transform .3s ease;" onmouseover="this.style.transform='scale(1.06)'" onmouseout="this.style.transform='scale(1)'">
+      </div>
+      {% endfor %}
     </div>
   </div>
 </section>
@@ -93,8 +109,13 @@
       <div style="margin-top:24px;">
         <h3 style="font-size:1rem;"><i class="bi bi-stars" style="color:var(--gold);"></i> Similar rooms</h3>
         {% for r in similar_rooms %}
-        <a href="{% url 'rooms:detail' r.pk %}" class="panel" style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
-          <span>{{ r.name }}</span><b>₹{{ r.price_per_night|floatformat:0 }}</b>
+        <a href="{% url 'rooms:detail' r.pk %}" class="panel" style="display:flex; gap:12px; align-items:center; margin-top:10px; text-decoration:none; color:inherit; padding:12px 16px;">
+          <img src="{{ r.image_url }}" alt="{{ r.name }}" style="width:54px; height:54px; border-radius:10px; object-fit:cover; flex-shrink:0;">
+          <div style="flex:1; min-width:0;">
+            <div style="font-weight:600; font-size:.92rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ r.name }}</div>
+            <div style="font-size:.76rem; color:var(--ink-60);">{{ r.category.name }}</div>
+          </div>
+          <b style="font-size:.95rem; color:var(--navy);">₹{{ r.price_per_night|floatformat:0 }}</b>
         </a>
         {% endfor %}
       </div>
