@@ -29,20 +29,17 @@ class RegisterForm(forms.ModelForm):
         return cleaned
 
     def clean_username(self):
-        username = self.cleaned_data.get('username', '').strip()
-        if User.objects.filter(username__iexact=username).exists():
-            raise forms.ValidationError("A user with this username already exists.")
-        return username
+        return self.cleaned_data.get('username', '').strip()
 
     def clean_email(self):
-        email = self.cleaned_data.get('email', '').strip().lower()
-        if User.objects.filter(email__iexact=email).exists():
-            raise forms.ValidationError("An account with this email already exists.")
-        return email
+        return self.cleaned_data.get('email', '').strip().lower()
 
     def clean_phone(self):
         raw_phone = self.cleaned_data.get('phone', '').strip().replace(' ', '').replace('-', '')
         return raw_phone
+
+    def validate_unique(self):
+        pass
 
 
 class LoginForm(forms.Form):

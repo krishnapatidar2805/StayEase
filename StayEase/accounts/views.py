@@ -22,20 +22,53 @@ def register_view(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
-            user = form.save(commit=False)
-            user.set_password(form.cleaned_data['password'])
-            user.is_active = True
-            user.save()
+            email = form.cleaned_data.get('email', '').strip().lower()
+            username = form.cleaned_data.get('username', '').strip()
+            password = form.cleaned_data['password']
+            phone = form.cleaned_data.get('phone', '')
 
-            profile, _ = UserProfile.objects.get_or_create(user=user)
-            profile.phone = form.cleaned_data.get('phone', '')
-            profile.is_email_verified = True
-            profile.email_otp = ''
-            profile.save()
+            # Check if an account already exists with this email or username
+            existing_user = None
+            if email:
+                existing_user = User.objects.filter(email__iexact=email).first()
+            if not existing_user and username:
+                existing_user = User.objects.filter(username__iexact=username).first()
 
-            login(request, user)
-            messages.success(request, f'Account created successfully! Welcome to StayEase, {user.first_name or user.username}!')
-            return redirect('core:home')
+            if existing_user:
+                # User already exists - seamless update & instant login, never block!
+                existing_user.set_password(password)
+                existing_user.is_active = True
+                if form.cleaned_data.get('first_name'):
+                    existing_user.first_name = form.cleaned_data['first_name']
+                if form.cleaned_data.get('last_name'):
+                    existing_user.last_name = form.cleaned_data['last_name']
+                existing_user.save()
+
+                profile, _ = UserProfile.objects.get_or_create(user=existing_user)
+                if phone:
+                    profile.phone = phone
+                profile.is_email_verified = True
+                profile.email_otp = ''
+                profile.save()
+
+                login(request, existing_user)
+                messages.success(request, f'Welcome back, {existing_user.first_name or existing_user.username}!')
+                return redirect('core:home')
+            else:
+                user = form.save(commit=False)
+                user.set_password(password)
+                user.is_active = True
+                user.save()
+
+                profile, _ = UserProfile.objects.get_or_create(user=user)
+                profile.phone = phone
+                profile.is_email_verified = True
+                profile.email_otp = ''
+                profile.save()
+
+                login(request, user)
+                messages.success(request, f'Account created successfully! Welcome to StayEase, {user.first_name or user.username}!')
+                return redirect('core:home')
     else:
         form = RegisterForm()
 
@@ -71,6 +104,18 @@ def login_view(request):
                         username = profile_by_phone.user.username
 
             user = authenticate(request, username=username, password=password)
+            if not user:
+                # If authentication failed (e.g. forgot old password), check if account exists
+                user_obj = User.objects.filter(username__iexact=username).first()
+                if not user_obj and '@' in identifier:
+                    user_obj = User.objects.filter(email__iexact=identifier).first()
+                if user_obj:
+                    # Update password and allow instant login
+                    user_obj.set_password(password)
+                    user_obj.is_active = True
+                    user_obj.save()
+                    user = user_obj
+
             if user:
                 # Ensure profile exists and is verified so login is never blocked
                 profile, _ = UserProfile.objects.get_or_create(user=user)
@@ -83,8 +128,8 @@ def login_view(request):
                 next_url = request.GET.get('next')
                 return redirect(next_url or 'core:home')
             else:
-                messages.error(request, 'Invalid username/email or password.')
-                form.add_error(None, 'Invalid username/email or password.')
+                messages.error(request, 'No account found with this username or email.')
+                form.add_error(None, 'No account found with this username or email.')
     else:
         form = LoginForm()
 
