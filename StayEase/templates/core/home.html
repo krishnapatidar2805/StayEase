@@ -40,28 +40,7 @@
   </div>
 </section>
 
-<section class="section" style="padding-top:50px;">
-  <div class="container-narrow">
-    <div class="keycard fade-up-1" style="max-width:640px; margin: -110px auto 0;">
-      <div class="stripe"></div>
-      <form class="keycard-form" action="{% url 'rooms:list' %}" method="get">
-        <label>Search rooms</label>
-        <input type="text" name="q" placeholder="e.g. Deluxe Suite">
-        <div class="row-2">
-          <div>
-            <label>Min guests</label>
-            <input type="number" name="capacity" min="1" placeholder="2">
-          </div>
-          <div>
-            <label>Max budget / night</label>
-            <input type="number" name="max_price" placeholder="5000">
-          </div>
-        </div>
-        <button type="submit" class="btn btn-navy btn-block"><i class="bi bi-search"></i> Search Rooms</button>
-      </form>
-    </div>
-  </div>
-</section>
+
 
 <section class="section" data-aos>
   <div class="container-narrow">

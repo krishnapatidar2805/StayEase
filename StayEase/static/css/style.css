@@ -150,7 +150,7 @@ a.link-gold { color: var(--gold); font-weight: 600; }
 }
 
 /* ---------------- Hero ---------------- */
-.hero { position: relative; overflow: hidden; background: radial-gradient(circle at 15% 20%, #163f5c 0%, var(--navy) 45%, var(--navy-deep) 100%); color: var(--cream); padding: 90px 24px 110px; }
+.hero { position: relative; overflow: hidden; background: radial-gradient(circle at 15% 20%, #163f5c 0%, var(--navy) 45%, var(--navy-deep) 100%); color: var(--cream); padding: 75px 24px 75px; }
 .hero::after { content: ''; position: absolute; inset: 0; background-image: radial-gradient(circle, rgba(198,154,68,.18) 1px, transparent 1px); background-size: 26px 26px; opacity: .5; pointer-events: none; }
 .hero-inner { max-width: 1180px; margin: 0 auto; position: relative; z-index: 2; display: grid; grid-template-columns: 1.1fr .9fr; gap: 40px; align-items: center; }
 .hero h1 { color: #fff; }
