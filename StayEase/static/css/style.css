@@ -93,8 +93,15 @@ a.link-gold { color: var(--gold); font-weight: 600; }
   border-bottom: 1px solid var(--cream-deep);
 }
 .navbar-inner { display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; max-width: 1280px; margin: 0 auto; }
-.brand { font-family: var(--font-display); font-size: 1.5rem; font-weight: 600; color: var(--navy); display: flex; align-items: center; gap: 8px; }
-.brand .dot { color: var(--gold); }
+.brand { font-family: var(--font-display); font-size: 1.55rem; font-weight: 700; color: var(--navy); display: inline-flex; align-items: center; gap: 10px; text-decoration: none; letter-spacing: -0.02em; transition: transform .2s ease; }
+.brand:hover { transform: translateY(-1px); }
+.brand-logo-badge { width: 38px; height: 38px; background: linear-gradient(135deg, #0a2338 0%, #10314a 55%, #1e4d70 100%); border-radius: 11px; display: inline-flex; align-items: center; justify-content: center; color: var(--gold-soft); font-size: 1.15rem; border: 1px solid rgba(198, 154, 68, 0.35); box-shadow: 0 4px 12px rgba(16, 49, 74, 0.15); transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.brand:hover .brand-logo-badge { transform: rotate(-6deg) scale(1.06); box-shadow: 0 6px 16px rgba(198, 154, 68, 0.35); color: #fff; border-color: var(--gold); }
+.brand-name { font-family: var(--font-display); font-weight: 700; letter-spacing: -0.02em; display: inline-flex; align-items: baseline; }
+.brand-highlight { background: linear-gradient(135deg, #c69a44 0%, #e2be73 50%, #9e7323 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; margin-left: 1px; }
+.brand-dot { color: var(--gold); font-size: 1.6rem; line-height: 0; margin-left: 1px; }
+.footer-brand .brand-name { color: #fff; }
+.footer-brand .brand-logo-badge { background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.04) 100%); border-color: rgba(198,154,68,0.45); color: var(--gold-soft); }
 .nav-links { display: flex; gap: 28px; align-items: center; }
 .nav-links a { font-size: .92rem; font-weight: 600; color: var(--charcoal); position: relative; padding: 4px 0; }
 .nav-links a::after { content: ''; position: absolute; left: 0; bottom: -3px; width: 0; height: 2px; background: var(--gold); transition: width .2s ease; }
